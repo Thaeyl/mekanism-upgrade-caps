@@ -46,3 +46,15 @@ installed upgrades * 2
 ```
 
 For example, 64 installed speed upgrades gives a 128x speed effect.
+
+## Building
+
+The included `build-release.ps1` script expects a local CurseForge/Minecraft install with NeoForge, Minecraft 1.21.1, Mekanism, Brigadier, and Mixin jars available.
+
+Optional environment variables:
+
+```powershell
+$env:MC_INSTANCE_DIR = "path\to\your\minecraft\instance"
+$env:CURSEFORGE_MINECRAFT_LIBRARIES = "path\to\minecraft\Install\libraries"
+.\build-release.ps1
+```
