@@ -1,4 +1,4 @@
-package com.ariyean.mekupgradecaps;
+package dev.mekupgradecaps;
 
 import mekanism.api.Upgrade;
 import mekanism.common.tile.interfaces.IUpgradeTile;

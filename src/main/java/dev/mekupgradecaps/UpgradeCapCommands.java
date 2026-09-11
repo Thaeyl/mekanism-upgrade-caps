@@ -1,4 +1,4 @@
-package com.ariyean.mekupgradecaps;
+package dev.mekupgradecaps;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;

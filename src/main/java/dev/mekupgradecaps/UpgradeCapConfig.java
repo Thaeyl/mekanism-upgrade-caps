@@ -1,4 +1,4 @@
-package com.ariyean.mekupgradecaps;
+package dev.mekupgradecaps;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,6 +1,6 @@
-package com.ariyean.mekupgradecaps.mixin;
+package dev.mekupgradecaps.mixin;
 
-import com.ariyean.mekupgradecaps.MekanismUpgradeMath;
+import dev.mekupgradecaps.MekanismUpgradeMath;
 import mekanism.common.tile.interfaces.IUpgradeTile;
 import mekanism.common.util.MekanismUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 @Mixin(value = MekanismUtils.class, remap = false)
 public abstract class MekanismUtilsMixin {
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Scale processing speed from installed upgrade count divided by Mekanism's original cap of 8.
      */
     @Overwrite
@@ -18,7 +18,7 @@ public abstract class MekanismUtilsMixin {
     }
 
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Allow upgrades beyond 8 to increase operations per tick after processing reaches 1 tick.
      */
     @Overwrite
@@ -31,7 +31,7 @@ public abstract class MekanismUtilsMixin {
     }
 
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Match energy use to the expanded speed and energy upgrade counts.
      */
     @Overwrite
@@ -43,7 +43,7 @@ public abstract class MekanismUtilsMixin {
     }
 
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Match energy capacity scaling to the expanded energy upgrade count.
      */
     @Overwrite

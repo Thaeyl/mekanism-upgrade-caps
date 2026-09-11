@@ -6,7 +6,7 @@ license = "MIT"
 modId = "mekupgradecaps"
 version = "1.0.0"
 displayName = "Mekanism Upgrade Caps"
-authors = "Ariyean"
+authors = "Mekanism Upgrade Caps contributors"
 description = '''Configurable Mekanism speed and energy upgrade caps for NeoForge 1.21.1.'''
 
 [[dependencies.mekupgradecaps]]

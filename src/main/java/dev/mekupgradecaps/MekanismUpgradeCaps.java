@@ -1,4 +1,4 @@
-package com.ariyean.mekupgradecaps;
+package dev.mekupgradecaps;
 
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;

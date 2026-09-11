@@ -1,6 +1,6 @@
-package com.ariyean.mekupgradecaps.mixin;
+package dev.mekupgradecaps.mixin;
 
-import com.ariyean.mekupgradecaps.MekanismUpgradeMath;
+import dev.mekupgradecaps.MekanismUpgradeMath;
 import java.util.ArrayList;
 import java.util.List;
 import mekanism.api.Upgrade;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 @Mixin(value = UpgradeUtils.class, remap = false)
 public abstract class UpgradeUtilsMixin {
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Display expanded linear speed/energy multipliers instead of Mekanism's standard cap-based value.
      */
     @Overwrite
@@ -35,7 +35,7 @@ public abstract class UpgradeUtilsMixin {
     }
 
     /**
-     * @author Ariyean
+     * @author Mekanism Upgrade Caps contributors
      * @reason Display the same expanded speed multiplier for exponential-style info callers.
      */
     @Overwrite

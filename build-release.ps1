@@ -5,7 +5,7 @@ $Instance = if ($env:MC_INSTANCE_DIR) { $env:MC_INSTANCE_DIR } else { Split-Path
 $Libraries = if ($env:CURSEFORGE_MINECRAFT_LIBRARIES) {
     $env:CURSEFORGE_MINECRAFT_LIBRARIES
 } else {
-    Join-Path (Split-Path -Parent $Instance) 'Install\libraries'
+    Join-Path (Split-Path -Parent (Split-Path -Parent $Instance)) 'Install\libraries'
 }
 $JarName = 'mekanism-upgrade-caps-neoforge-1.21.1-1.0.0.jar'
 $BuildClasses = Join-Path $Root 'build\classes'

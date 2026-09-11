@@ -1,6 +1,6 @@
-package com.ariyean.mekupgradecaps.mixin;
+package dev.mekupgradecaps.mixin;
 
-import com.ariyean.mekupgradecaps.UpgradeCapConfig;
+import dev.mekupgradecaps.UpgradeCapConfig;
 import mekanism.api.Upgrade;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
