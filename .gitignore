@@ -1,0 +1,15 @@
+.gradle/
+build/
+out/
+*.class
+*.log
+*.tmp
+
+# Local IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS noise
+Thumbs.db
+.DS_Store
