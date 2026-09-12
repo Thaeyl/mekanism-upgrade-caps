@@ -28,11 +28,54 @@ Known working/approved:
 Current beta jars under test:
 
 - Minecraft 1.20.1, Forge, ATM9
-  - Jar: `mekanism-upgrade-caps-forge-1.20.1-1.0.3.jar`
+  - Jar: `mekanism-upgrade-caps-forge-1.20.1-1.0.6.jar`
 - Minecraft 1.19.2, Forge, ATM8
-  - Jar: `mekanism-upgrade-caps-forge-1.19.2-1.0.3.jar`
+  - Jar: `mekanism-upgrade-caps-forge-1.19.2-1.0.6.jar`
 - Minecraft 1.18.2, Forge, ATM7
-  - Jar: `mekanism-upgrade-caps-forge-1.18.2-1.0.3.jar`
+  - Jar: `mekanism-upgrade-caps-forge-1.18.2-1.0.6.jar`
+
+## Current State After 1.0.6
+
+Rollback commits:
+
+```text
+b74838a Stabilize legacy Forge upgrade scaling
+f4029ba Restore Forge commands and preserve upgrade counts
+```
+
+User-tested Forge `1.0.5` behavior:
+
+- ATM9 starts, creates worlds, enters worlds, and plays.
+- ATM9 config file changes work and display the configured max in the UI.
+- ATM9 speed/effect scaling displays correctly and appears to run correctly.
+- ATM8 has the same good behavior as ATM9.
+- ATM7 has the same good behavior as ATM9, but closing the client reports exit code `-1073740940`.
+
+Implemented after that in Forge `1.0.6`:
+
+- Restored `/mekupgradecaps get`.
+- Restored `/mekupgradecaps set speed <value>`.
+- Restored `/mekupgradecaps set energy <value>`.
+- Added `UpgradeSerializationMixin` so saved upgrade counts above Mekanism's built-in `8` are read back using this mod's dynamic caps instead of Mekanism's private `maxStack` field.
+- Built and installed `1.0.6` jars into ATM7, ATM8, and ATM9.
+
+Needs next in-game verification:
+
+- Commands work in ATM7, ATM8, and ATM9.
+- A machine with more than 8 installed upgrades, for example 64 speed upgrades, still has the same count after saving, closing, restarting, and reopening the world with the updated jar.
+- ATM7 still starts and plays with `1.0.6`.
+- ATM7 close-time exit code `-1073740940` persists or disappears with `1.0.6`.
+
+ATM7 close-time note:
+
+- Latest inspected ATM7 log from `17:30` showed normal world save/server shutdown and no `mekupgradecaps` exception.
+- The final relevant line was a ModernFix warning: `One or more BufferBuilders have been leaked, ModernFix will attempt to correct this.`
+- Current interpretation: likely native/render/client cleanup noise on exit, not this mod's Java-side logic, unless a new `1.0.6` log says otherwise.
+
+Config note:
+
+- The config is `.properties` because the mod currently uses one tiny cross-version, cross-loader config loader.
+- TOML would be more conventional for Forge/NeoForge, but would require loader-specific config integration or adding a TOML parser/config layer.
 
 Installed test pack folders:
 
