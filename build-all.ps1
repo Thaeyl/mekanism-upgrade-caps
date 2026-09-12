@@ -58,14 +58,6 @@ function Resolve-FirstFile {
     $file.FullName
 }
 
-function Download-IfMissing {
-    param([string] $Url, [string] $Output)
-    if (!(Test-Path -LiteralPath $Output)) {
-        Write-Host "Downloading $Url"
-        Invoke-WebRequest -Uri $Url -OutFile $Output
-    }
-}
-
 function Expand-Template {
     param([string] $Text, [hashtable] $Values)
     foreach ($key in $Values.Keys) {
@@ -82,17 +74,6 @@ function Add-JarContent {
     } finally {
         Pop-Location
     }
-}
-
-function New-ForgeStubs {
-    param([string] $StubDir)
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\fml\common\Mod.java') 'package net.minecraftforge.fml.common; import java.lang.annotation.*; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface Mod { String value(); }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\common\MinecraftForge.java') 'package net.minecraftforge.common; public class MinecraftForge { public static final EventBus EVENT_BUS = new EventBus(); public static class EventBus { public void register(Object listener) {} } }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\eventbus\api\SubscribeEvent.java') 'package net.minecraftforge.eventbus.api; import java.lang.annotation.*; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) public @interface SubscribeEvent {}'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\event\RegisterCommandsEvent.java') 'package net.minecraftforge.event; import com.mojang.brigadier.CommandDispatcher; import net.minecraft.commands.CommandSourceStack; public class RegisterCommandsEvent { public CommandDispatcher<CommandSourceStack> getDispatcher(){ return null; } }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraft\commands\CommandSourceStack.java') 'package net.minecraft.commands; import net.minecraft.network.chat.Component; public class CommandSourceStack { public boolean hasPermission(int level){ return false; } public void sendFailure(Component component) {} }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraft\commands\Commands.java') 'package net.minecraft.commands; import com.mojang.brigadier.arguments.ArgumentType; import com.mojang.brigadier.builder.LiteralArgumentBuilder; import com.mojang.brigadier.builder.RequiredArgumentBuilder; public class Commands { public static LiteralArgumentBuilder<CommandSourceStack> literal(String name){ return LiteralArgumentBuilder.literal(name); } public static <T> RequiredArgumentBuilder<CommandSourceStack,T> argument(String name, ArgumentType<T> type){ return RequiredArgumentBuilder.argument(name, type); } }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraft\network\chat\Component.java') 'package net.minecraft.network.chat; public interface Component { static Component literal(String value){ return null; } }'
 }
 
 function Build-NeoForge1211 {
@@ -143,8 +124,6 @@ function Build-LegacyForge {
 
     $work = Join-Path $BuildDir "forge-$MinecraftVersion"
     $sourceDir = Join-Path $work 'src'
-    $stubSourceDir = Join-Path $work 'stubs-src'
-    $stubClassesDir = Join-Path $work 'stubs-classes'
     $classesDir = Join-Path $work 'classes'
     $resourcesDir = Join-Path $work 'resources'
     Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue
