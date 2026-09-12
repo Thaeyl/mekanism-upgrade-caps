@@ -87,7 +87,8 @@ function Add-JarContent {
 function New-ForgeStubs {
     param([string] $StubDir)
     Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\fml\common\Mod.java') 'package net.minecraftforge.fml.common; import java.lang.annotation.*; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.TYPE) public @interface Mod { String value(); }'
-    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\common\MinecraftForge.java') 'package net.minecraftforge.common; public class MinecraftForge { public static final EventBus EVENT_BUS = new EventBus(); public static class EventBus { public <T> void addListener(java.util.function.Consumer<T> listener) {} } }'
+    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\common\MinecraftForge.java') 'package net.minecraftforge.common; public class MinecraftForge { public static final EventBus EVENT_BUS = new EventBus(); public static class EventBus { public void register(Object listener) {} } }'
+    Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\eventbus\api\SubscribeEvent.java') 'package net.minecraftforge.eventbus.api; import java.lang.annotation.*; @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) public @interface SubscribeEvent {}'
     Write-Utf8NoBom (Join-Path $StubDir 'net\minecraftforge\event\RegisterCommandsEvent.java') 'package net.minecraftforge.event; import com.mojang.brigadier.CommandDispatcher; import net.minecraft.commands.CommandSourceStack; public class RegisterCommandsEvent { public CommandDispatcher<CommandSourceStack> getDispatcher(){ return null; } }'
     Write-Utf8NoBom (Join-Path $StubDir 'net\minecraft\commands\CommandSourceStack.java') 'package net.minecraft.commands; import net.minecraft.network.chat.Component; public class CommandSourceStack { public boolean hasPermission(int level){ return false; } public void sendFailure(Component component) {} }'
     Write-Utf8NoBom (Join-Path $StubDir 'net\minecraft\commands\Commands.java') 'package net.minecraft.commands; import com.mojang.brigadier.arguments.ArgumentType; import com.mojang.brigadier.builder.LiteralArgumentBuilder; import com.mojang.brigadier.builder.RequiredArgumentBuilder; public class Commands { public static LiteralArgumentBuilder<CommandSourceStack> literal(String name){ return LiteralArgumentBuilder.literal(name); } public static <T> RequiredArgumentBuilder<CommandSourceStack,T> argument(String name, ArgumentType<T> type){ return RequiredArgumentBuilder.argument(name, type); } }'
@@ -132,8 +133,11 @@ function Build-NeoForge1211 {
 function Build-LegacyForge {
     param(
         [string] $MinecraftVersion,
-        [string] $MekanismCoordinateVersion,
+        [string] $ForgeVersion,
+        [string] $MinecraftClientVersion,
+        [string] $MekanismJarPath,
         [string] $ForgeLoaderVersion,
+        [string] $MinimumMekanismVersion,
         [int] $PackFormat
     )
 
@@ -144,23 +148,39 @@ function Build-LegacyForge {
     $classesDir = Join-Path $work 'classes'
     $resourcesDir = Join-Path $work 'resources'
     Remove-Item -LiteralPath $work -Recurse -Force -ErrorAction SilentlyContinue
-    New-Item -ItemType Directory -Force -Path $sourceDir, $stubSourceDir, $stubClassesDir, $classesDir, $resourcesDir | Out-Null
+    New-Item -ItemType Directory -Force -Path $sourceDir, $classesDir, $resourcesDir | Out-Null
 
     $mixin = Resolve-FirstFile (Join-Path $Libraries 'net\fabricmc\sponge-mixin') 'sponge-mixin-*.jar'
     $brigadier = Resolve-FirstFile (Join-Path $Libraries 'com\mojang\brigadier') 'brigadier-*.jar'
-    $mekanismJar = Join-Path $DepsDir "Mekanism-$MekanismCoordinateVersion.jar"
-    Download-IfMissing "https://modmaven.dev/mekanism/Mekanism/$MekanismCoordinateVersion/Mekanism-$MekanismCoordinateVersion.jar" $mekanismJar
+    $eventBus = Resolve-FirstFile (Join-Path $Libraries 'net\minecraftforge\eventbus') 'eventbus-*.jar'
+    $forgeDir = Join-Path $Libraries "net\minecraftforge\forge\$MinecraftVersion-$ForgeVersion"
+    $fmlCoreDir = Join-Path $Libraries "net\minecraftforge\fmlcore\$MinecraftVersion-$ForgeVersion"
+    $javaFmlDir = Join-Path $Libraries "net\minecraftforge\javafmllanguage\$MinecraftVersion-$ForgeVersion"
+    $clientDir = Join-Path $Libraries "net\minecraft\client\$MinecraftClientVersion"
+    $forgeClient = Join-Path $forgeDir "forge-$MinecraftVersion-$ForgeVersion-client.jar"
+    $forgeUniversal = Join-Path $forgeDir "forge-$MinecraftVersion-$ForgeVersion-universal.jar"
+    $fmlCore = Join-Path $fmlCoreDir "fmlcore-$MinecraftVersion-$ForgeVersion.jar"
+    $javaFml = Join-Path $javaFmlDir "javafmllanguage-$MinecraftVersion-$ForgeVersion.jar"
+    $minecraftSrg = Join-Path $clientDir "client-$MinecraftClientVersion-srg.jar"
+    $minecraftSlim = Join-Path $clientDir "client-$MinecraftClientVersion-slim.jar"
+    $minecraftExtra = Join-Path $clientDir "client-$MinecraftClientVersion-extra.jar"
+    foreach ($required in @($forgeClient, $forgeUniversal, $fmlCore, $javaFml, $minecraftSrg, $minecraftSlim, $minecraftExtra, $MekanismJarPath)) {
+        if (!(Test-Path -LiteralPath $required)) {
+            throw "Could not find required compile artifact: $required"
+        }
+    }
 
     Copy-JavaSource (Join-Path $Root 'src\main\java\dev\mekupgradecaps\UpgradeCapConfig.java') (Join-Path $sourceDir 'dev\mekupgradecaps\UpgradeCapConfig.java')
     Copy-JavaSource (Join-Path $Root 'src\main\java\dev\mekupgradecaps\MekanismUpgradeMath.java') (Join-Path $sourceDir 'dev\mekupgradecaps\MekanismUpgradeMath.java')
     Copy-JavaSource (Join-Path $Root 'src\main\java\dev\mekupgradecaps\mixin\UpgradeMixin.java') (Join-Path $sourceDir 'dev\mekupgradecaps\mixin\UpgradeMixin.java')
+    Copy-JavaSource (Join-Path $Root 'src\main\java\dev\mekupgradecaps\mixin\UpgradeUtilsMixin.java') (Join-Path $sourceDir 'dev\mekupgradecaps\mixin\UpgradeUtilsMixin.java')
     Copy-Item -LiteralPath (Join-Path $Root 'src\legacy\java\dev') -Destination $sourceDir -Recurse -Force
     Copy-Item -Path (Join-Path $Root 'src\legacy\resources\*') -Destination $resourcesDir -Recurse -Force
 
     $templateValues = @{
-        modVersion = '1.0.0'
+        modVersion = '1.0.5'
         minecraftVersion = $MinecraftVersion
-        mekanismVersion = $MekanismCoordinateVersion.Substring($MekanismCoordinateVersion.IndexOf('-') + 1)
+        mekanismVersion = $MinimumMekanismVersion
         loaderVersion = $ForgeLoaderVersion
         packFormat = $PackFormat
     }
@@ -170,13 +190,23 @@ function Build-LegacyForge {
     Write-Utf8NoBom (Join-Path $resourcesDir 'pack.mcmeta') $packMcmeta
     Remove-Item -LiteralPath (Join-Path $resourcesDir 'META-INF\mods.toml.template'), (Join-Path $resourcesDir 'pack.mcmeta.template') -Force
 
-    New-ForgeStubs $stubSourceDir
-    Invoke-Checked (@($Javac, '--release', '17', '-cp', $brigadier, '-d', $stubClassesDir) +
-        @(Get-ChildItem -Recurse $stubSourceDir -Filter '*.java' | ForEach-Object FullName))
-    Invoke-Checked (@($Javac, '--release', '17', '-proc:none', '-cp', (@($stubClassesDir, $brigadier, $mixin, $mekanismJar) -join ';'), '-d', $classesDir) +
-        @(Get-ChildItem -Recurse $sourceDir -Filter '*.java' | ForEach-Object FullName))
+    $classpath = @(
+        $forgeClient,
+        $forgeUniversal,
+        $fmlCore,
+        $javaFml,
+        $minecraftSrg,
+        $minecraftSlim,
+        $minecraftExtra,
+        $eventBus,
+        $brigadier,
+        $mixin,
+        $MekanismJarPath
+    ) -join ';'
+    Invoke-Checked (@($Javac, '--release', '17', '-proc:none', '-cp', $classpath, '-d', $classesDir) +
+        @(Get-ChildItem -Recurse $sourceDir -Filter '*.java' | Where-Object { $_.Name -ne 'UpgradeCapCommands.java' } | ForEach-Object FullName))
 
-    $outputJar = Join-Path $ReleaseDir "mekanism-upgrade-caps-forge-$MinecraftVersion-1.0.0.jar"
+    $outputJar = Join-Path $ReleaseDir "mekanism-upgrade-caps-forge-$MinecraftVersion-1.0.5.jar"
     Remove-Item -LiteralPath $outputJar -Force -ErrorAction SilentlyContinue
     Push-Location $resourcesDir
     try {
@@ -189,8 +219,8 @@ function Build-LegacyForge {
 }
 
 Build-NeoForge1211
-Build-LegacyForge '1.20.1' '1.20.1-10.4.16.80' '[47,)' 15
-Build-LegacyForge '1.19.2' '1.19.2-10.3.9.13' '[43.2.8,)' 10
-Build-LegacyForge '1.18.2' '1.18.2-10.2.5.465' '[40,)' 9
+Build-LegacyForge '1.20.1' '47.4.0' '1.20.1-20230612.114412' (Join-Path $CurseForgeRoot 'Instances\All the Mods 9 - ATM9\mods\Mekanism-1.20.1-10.4.15.75.jar') '[47,)' '10.4.15' 15
+Build-LegacyForge '1.19.2' '43.2.14' '1.19.2-20220805.130853' (Join-Path $CurseForgeRoot 'Instances\All the Mods 8 - ATM8\mods\Mekanism-1.19.2-10.3.9.13.jar') '[43,)' '10.3.9' 10
+Build-LegacyForge '1.18.2' '40.2.17' '1.18.2-20220404.173914' (Join-Path $CurseForgeRoot 'Instances\All the Mods 7 - ATM7\mods\Mekanism-1.18.2-10.2.5.465.jar') '[40,)' '10.2.5' 9
 
 Get-ChildItem -LiteralPath $ReleaseDir -Filter '*.jar' | Sort-Object Name | Select-Object Name, Length, LastWriteTime

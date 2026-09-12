@@ -9,7 +9,7 @@ This add-on lets Mekanism machines accept more than the default 8 speed and ener
 | Minecraft | Loader | Mekanism target | Java |
 | --- | --- | --- | --- |
 | 1.21.1 | NeoForge 21.1.203+ | 10.7.15+ | 21 |
-| 1.20.1 | Forge 47+ | 10.4.16+ | 17 |
+| 1.20.1 | Forge 47+ | 10.4.15+ | 17 |
 | 1.19.2 | Forge 43.2.8+ | 10.3.9+ | 17 |
 | 1.18.2 | Forge 40+ | 10.2.5+ | 17 |
 
@@ -20,9 +20,9 @@ Use these labels when publishing files:
 | File | Modloader tag | Release tag |
 | --- | --- | --- |
 | `mekanism-upgrade-caps-neoforge-1.21.1-1.0.0.jar` | NeoForge | Release |
-| `mekanism-upgrade-caps-forge-1.20.1-1.0.0.jar` | Forge | Beta |
-| `mekanism-upgrade-caps-forge-1.19.2-1.0.0.jar` | Forge | Beta |
-| `mekanism-upgrade-caps-forge-1.18.2-1.0.0.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.20.1-1.0.3.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.19.2-1.0.3.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.18.2-1.0.3.jar` | Forge | Beta |
 
 The NeoForge 1.21.1 build has been tested in-game. The Forge builds compile against their matching Mekanism branches and should be treated as beta until tested in those packs.
 

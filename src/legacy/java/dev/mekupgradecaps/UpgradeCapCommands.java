@@ -3,8 +3,6 @@ package dev.mekupgradecaps;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.function.Supplier;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -16,19 +14,19 @@ public final class UpgradeCapCommands {
 
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(
-              Commands.literal("mekupgradecaps")
+              Commands.m_82127_("mekupgradecaps")
                     .requires(source -> source.hasPermission(2))
-                    .then(Commands.literal("get")
+                    .then(Commands.m_82127_("get")
                           .executes(context -> show(context.getSource())))
-                    .then(Commands.literal("set")
+                    .then(Commands.m_82127_("set")
                           .then(setCommand("speed"))
                           .then(setCommand("energy")))
         );
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> setCommand(String upgrade) {
-        return Commands.literal(upgrade)
-              .then(Commands.argument("value", IntegerArgumentType.integer(0, 1024))
+        return Commands.m_82127_(upgrade)
+              .then(Commands.m_82129_("value", IntegerArgumentType.integer(0, 1024))
                     .executes(context -> set(
                           context.getSource(),
                           upgrade,
@@ -37,8 +35,8 @@ public final class UpgradeCapCommands {
     }
 
     private static int show(CommandSourceStack source) {
-        sendSuccess(source, "Mekanism upgrade caps: speed=" + UpgradeCapConfig.speedMax()
-              + ", energy=" + UpgradeCapConfig.energyMax(), false);
+        source.m_81354_(Component.m_237113_("Mekanism upgrade caps: speed=" + UpgradeCapConfig.speedMax()
+              + ", energy=" + UpgradeCapConfig.energyMax()), false);
         return 1;
     }
 
@@ -49,27 +47,13 @@ public final class UpgradeCapCommands {
             } else {
                 UpgradeCapConfig.setEnergyMax(value);
             }
-            sendSuccess(source, "Set Mekanism " + upgrade + " upgrade cap to " + value + ".", true);
+            source.m_81354_(Component.m_237113_(
+                  "Set Mekanism " + upgrade + " upgrade cap to " + value + "."
+            ), true);
             return show(source);
         } catch (IOException exception) {
-            source.sendFailure(Component.literal("Could not save Mekanism upgrade cap: " + exception.getMessage()));
+            source.m_81352_(Component.m_237113_("Could not save Mekanism upgrade cap: " + exception.getMessage()));
             return 0;
-        }
-    }
-
-    private static void sendSuccess(CommandSourceStack source, String message, boolean broadcast) {
-        Component component = Component.literal(message);
-        try {
-            Method modern = source.getClass().getMethod("sendSuccess", Supplier.class, boolean.class);
-            modern.invoke(source, (Supplier<Component>) () -> component, broadcast);
-            return;
-        } catch (ReflectiveOperationException ignored) {
-        }
-        try {
-            Method legacy = source.getClass().getMethod("sendSuccess", Component.class, boolean.class);
-            legacy.invoke(source, component, broadcast);
-        } catch (ReflectiveOperationException exception) {
-            throw new IllegalStateException("Could not send command feedback", exception);
         }
     }
 }
