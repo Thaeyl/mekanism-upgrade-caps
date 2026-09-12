@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "${loaderVersion}"
+license = "MIT"
+
+[[mods]]
+modId = "mekupgradecaps"
+version = "${modVersion}"
+displayName = "Mekanism Upgrade Caps"
+authors = "Mekanism Upgrade Caps contributors"
+description = '''Configurable Mekanism speed and energy upgrade caps for Forge ${minecraftVersion}.'''
+
+[[dependencies.mekupgradecaps]]
+modId = "forge"
+mandatory = true
+versionRange = "${loaderVersion}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mekupgradecaps]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraftVersion},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.mekupgradecaps]]
+modId = "mekanism"
+mandatory = true
+versionRange = "[${mekanismVersion},)"
+ordering = "AFTER"
+side = "BOTH"

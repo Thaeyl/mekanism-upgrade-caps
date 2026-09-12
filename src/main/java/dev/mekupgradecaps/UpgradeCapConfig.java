@@ -76,7 +76,7 @@ public final class UpgradeCapConfig {
     }
 
     private static int clamp(int value) {
-        return Math.clamp(value, 0, 1024);
+        return Math.max(0, Math.min(1024, value));
     }
 
     private static void writeDefaults() throws IOException {

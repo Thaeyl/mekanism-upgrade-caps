@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "dev.mekupgradecaps.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "UpgradeMixin",
+    "MekanismUtilsLegacyMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

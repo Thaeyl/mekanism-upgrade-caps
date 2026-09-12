@@ -1,9 +1,13 @@
 .gradle/
 build/
+deps/
 out/
 *.class
 *.log
 *.tmp
+
+# Generated release jars are built locally for CurseForge uploads.
+release/*.jar
 
 # Local IDE files
 .idea/

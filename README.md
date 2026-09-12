@@ -1,18 +1,34 @@
 # Mekanism Upgrade Caps
 
-Configurable Mekanism speed and energy upgrade caps for Minecraft 1.21.1 on NeoForge.
+Configurable Mekanism speed and energy upgrade caps for Forge and NeoForge modpacks.
 
-This add-on lets machines accept more than the default 8 speed and energy upgrades. The expanded upgrade counts also affect machine processing speed, energy usage, energy capacity, and the upgrade tooltip display.
+This add-on lets Mekanism machines accept more than the default 8 speed and energy upgrades. Expanded upgrade counts affect machine processing speed, energy usage, and energy capacity. The NeoForge 1.21.1 build also updates Mekanism's upgrade tooltip display.
 
-## Requirements
+## Supported Versions
 
-- Minecraft 1.21.1
-- NeoForge 21.1.203 or newer
-- Mekanism 10.7.15 or newer
+| Minecraft | Loader | Mekanism target | Java |
+| --- | --- | --- | --- |
+| 1.21.1 | NeoForge 21.1.203+ | 10.7.15+ | 21 |
+| 1.20.1 | Forge 47+ | 10.4.16+ | 17 |
+| 1.19.2 | Forge 43.2.8+ | 10.3.9+ | 17 |
+| 1.18.2 | Forge 40+ | 10.2.5+ | 17 |
+
+## Release Labels
+
+Use these labels when publishing files:
+
+| File | Modloader tag | Release tag |
+| --- | --- | --- |
+| `mekanism-upgrade-caps-neoforge-1.21.1-1.0.0.jar` | NeoForge | Release |
+| `mekanism-upgrade-caps-forge-1.20.1-1.0.0.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.19.2-1.0.0.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.18.2-1.0.0.jar` | Forge | Beta |
+
+The NeoForge 1.21.1 build has been tested in-game. The Forge builds compile against their matching Mekanism branches and should be treated as beta until tested in those packs.
 
 ## Commands
 
-Requires permission level 2.
+Commands require permission level 2.
 
 ```text
 /mekupgradecaps get
@@ -22,7 +38,7 @@ Requires permission level 2.
 
 ## Config
 
-The mod creates:
+The mod creates this file on first run:
 
 ```text
 config/mekanism-upgrade-caps.properties
@@ -35,11 +51,11 @@ speedMax=16
 energyMax=16
 ```
 
-Restarting the game is recommended after changing the file manually. Command changes are saved immediately.
+Command changes are saved immediately. If you edit the file manually, restarting the game or server is recommended.
 
 ## Scaling
 
-Speed and energy effects use a linear display/behavior multiplier:
+Speed and energy effects use a linear multiplier:
 
 ```text
 installed upgrades * 2
@@ -47,14 +63,35 @@ installed upgrades * 2
 
 For example, 64 installed speed upgrades gives a 128x speed effect.
 
+Energy use scales with speed and energy upgrades:
+
+```text
+speedMultiplier * speedMultiplier / energyMultiplier
+```
+
+Energy capacity scales with the energy upgrade multiplier.
+
 ## Building
 
-The included `build-release.ps1` script expects a local CurseForge/Minecraft install with NeoForge, Minecraft 1.21.1, Mekanism, Brigadier, and Mixin jars available.
+Run the public build script from the repository root:
+
+```powershell
+.\build-all.ps1
+```
+
+The script writes jars to `release/` and temporary compile output to `build/`. It downloads Mekanism compile jars into `deps/` when needed. Those folders are intentionally ignored by git.
 
 Optional environment variables:
 
 ```powershell
-$env:MC_INSTANCE_DIR = "path\to\your\minecraft\instance"
+$env:MC_INSTANCE_DIR = "path\to\your\1.21.1 NeoForge instance"
 $env:CURSEFORGE_MINECRAFT_LIBRARIES = "path\to\minecraft\Install\libraries"
-.\build-release.ps1
+$env:JAVAC_EXE = "path\to\javac.exe"
+$env:JAR_EXE = "path\to\jar.exe"
 ```
+
+The 1.21.1 build currently uses the local NeoForge/Minecraft/Mekanism jars from the configured instance. The legacy Forge builds use Mekanism jars from ModMaven plus small compile-only stubs for Forge and Minecraft command classes.
+
+## Distribution
+
+Upload the generated jar that matches the target Minecraft and loader version. This mod is MIT licensed.
