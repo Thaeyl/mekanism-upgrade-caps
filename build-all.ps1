@@ -178,7 +178,7 @@ function Build-LegacyForge {
     Copy-Item -Path (Join-Path $Root 'src\legacy\resources\*') -Destination $resourcesDir -Recurse -Force
 
     $templateValues = @{
-        modVersion = '1.0.5'
+        modVersion = '1.0.6'
         minecraftVersion = $MinecraftVersion
         mekanismVersion = $MinimumMekanismVersion
         loaderVersion = $ForgeLoaderVersion
@@ -204,9 +204,9 @@ function Build-LegacyForge {
         $MekanismJarPath
     ) -join ';'
     Invoke-Checked (@($Javac, '--release', '17', '-proc:none', '-cp', $classpath, '-d', $classesDir) +
-        @(Get-ChildItem -Recurse $sourceDir -Filter '*.java' | Where-Object { $_.Name -ne 'UpgradeCapCommands.java' } | ForEach-Object FullName))
+        @(Get-ChildItem -Recurse $sourceDir -Filter '*.java' | ForEach-Object FullName))
 
-    $outputJar = Join-Path $ReleaseDir "mekanism-upgrade-caps-forge-$MinecraftVersion-1.0.5.jar"
+    $outputJar = Join-Path $ReleaseDir "mekanism-upgrade-caps-forge-$MinecraftVersion-1.0.6.jar"
     Remove-Item -LiteralPath $outputJar -Force -ErrorAction SilentlyContinue
     Push-Location $resourcesDir
     try {

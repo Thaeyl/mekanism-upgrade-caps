@@ -2,7 +2,7 @@
 
 Configurable Mekanism speed and energy upgrade caps for Forge and NeoForge modpacks.
 
-This add-on lets Mekanism machines accept more than the default 8 speed and energy upgrades. Expanded upgrade counts affect machine processing speed, energy usage, and energy capacity. The NeoForge 1.21.1 build also updates Mekanism's upgrade tooltip display.
+This add-on lets Mekanism machines accept more than the default 8 speed and energy upgrades. Expanded upgrade counts affect machine processing speed, energy usage, energy capacity, saved upgrade counts, and Mekanism's upgrade tooltip display.
 
 ## Supported Versions
 
@@ -10,7 +10,7 @@ This add-on lets Mekanism machines accept more than the default 8 speed and ener
 | --- | --- | --- | --- |
 | 1.21.1 | NeoForge 21.1.203+ | 10.7.15+ | 21 |
 | 1.20.1 | Forge 47+ | 10.4.15+ | 17 |
-| 1.19.2 | Forge 43.2.8+ | 10.3.9+ | 17 |
+| 1.19.2 | Forge 43+ | 10.3.9+ | 17 |
 | 1.18.2 | Forge 40+ | 10.2.5+ | 17 |
 
 ## Release Labels
@@ -20,11 +20,11 @@ Use these labels when publishing files:
 | File | Modloader tag | Release tag |
 | --- | --- | --- |
 | `mekanism-upgrade-caps-neoforge-1.21.1-1.0.0.jar` | NeoForge | Release |
-| `mekanism-upgrade-caps-forge-1.20.1-1.0.3.jar` | Forge | Beta |
-| `mekanism-upgrade-caps-forge-1.19.2-1.0.3.jar` | Forge | Beta |
-| `mekanism-upgrade-caps-forge-1.18.2-1.0.3.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.20.1-1.0.6.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.19.2-1.0.6.jar` | Forge | Beta |
+| `mekanism-upgrade-caps-forge-1.18.2-1.0.6.jar` | Forge | Beta |
 
-The NeoForge 1.21.1 build has been tested in-game. The Forge builds compile against their matching Mekanism branches and should be treated as beta until tested in those packs.
+The NeoForge 1.21.1 build has been tested in-game. The Forge builds compile against their matching Forge, Minecraft, and Mekanism branches and should be treated as beta until tested in those packs.
 
 ## Commands
 
@@ -90,7 +90,7 @@ $env:JAVAC_EXE = "path\to\javac.exe"
 $env:JAR_EXE = "path\to\jar.exe"
 ```
 
-The 1.21.1 build currently uses the local NeoForge/Minecraft/Mekanism jars from the configured instance. The legacy Forge builds use Mekanism jars from ModMaven plus small compile-only stubs for Forge and Minecraft command classes.
+The 1.21.1 build currently uses the local NeoForge/Minecraft/Mekanism jars from the configured instance. The legacy Forge builds use the local CurseForge library cache plus each target pack's Mekanism jar so command and mixin signatures match the tested runtime.
 
 ## Distribution
 
