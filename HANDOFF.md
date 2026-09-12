@@ -28,11 +28,11 @@ Known working/approved:
 Current beta jars under test:
 
 - Minecraft 1.20.1, Forge, ATM9
-  - Jar: `mekanism-upgrade-caps-forge-1.20.1-1.0.6.jar`
+  - Jar: `MekanismUpgradeCaps-Forge-1.20.1-1.0.0.jar`
 - Minecraft 1.19.2, Forge, ATM8
-  - Jar: `mekanism-upgrade-caps-forge-1.19.2-1.0.6.jar`
+  - Jar: `MekanismUpgradeCaps-Forge-1.19.2-1.0.0.jar`
 - Minecraft 1.18.2, Forge, ATM7
-  - Jar: `mekanism-upgrade-caps-forge-1.18.2-1.0.6.jar`
+  - Jar: `MekanismUpgradeCaps-Forge-1.18.2-1.0.0.jar`
 
 ## Current State After 1.0.6
 
@@ -59,12 +59,18 @@ Implemented after that in Forge `1.0.6`:
 - Added `UpgradeSerializationMixin` so saved upgrade counts above Mekanism's built-in `8` are read back using this mod's dynamic caps instead of Mekanism's private `maxStack` field.
 - Built and installed `1.0.6` jars into ATM7, ATM8, and ATM9.
 
-Needs next in-game verification:
+User-tested Forge `1.0.6` behavior:
 
 - Commands work in ATM7, ATM8, and ATM9.
-- A machine with more than 8 installed upgrades, for example 64 speed upgrades, still has the same count after saving, closing, restarting, and reopening the world with the updated jar.
-- ATM7 still starts and plays with `1.0.6`.
-- ATM7 close-time exit code `-1073740940` persists or disappears with `1.0.6`.
+- Upgrade counts above 8 persist across mod updates.
+- Lowering the config below currently installed upgrade counts leaves the extra upgrades in the machine until relog. This is accepted behavior and is documented as a warning.
+
+Current release preparation:
+
+- Official public version is `1.0.0` for all supported Minecraft/loader builds.
+- Release jars use readable names: `MekanismUpgradeCaps-<Loader>-<Minecraft>-1.0.0.jar`.
+- CurseForge description is in `CURSEFORGE_DESCRIPTION.md`.
+- GitHub/CurseForge release notes and per-file changelogs are in `RELEASE_NOTES.md`.
 
 ATM7 close-time note:
 

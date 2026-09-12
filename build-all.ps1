@@ -78,7 +78,7 @@ function Add-JarContent {
 
 function Build-NeoForge1211 {
     $buildClasses = Join-Path $BuildDir 'classes-1.21.1-neoforge'
-    $outputJar = Join-Path $ReleaseDir 'mekanism-upgrade-caps-neoforge-1.21.1-1.0.0.jar'
+    $outputJar = Join-Path $ReleaseDir 'MekanismUpgradeCaps-NeoForge-1.21.1-1.0.0.jar'
     Remove-Item -LiteralPath $buildClasses -Recurse -Force -ErrorAction SilentlyContinue
     New-Item -ItemType Directory -Force -Path $buildClasses | Out-Null
 
@@ -157,7 +157,7 @@ function Build-LegacyForge {
     Copy-Item -Path (Join-Path $Root 'src\legacy\resources\*') -Destination $resourcesDir -Recurse -Force
 
     $templateValues = @{
-        modVersion = '1.0.6'
+        modVersion = '1.0.0'
         minecraftVersion = $MinecraftVersion
         mekanismVersion = $MinimumMekanismVersion
         loaderVersion = $ForgeLoaderVersion
@@ -185,7 +185,7 @@ function Build-LegacyForge {
     Invoke-Checked (@($Javac, '--release', '17', '-proc:none', '-cp', $classpath, '-d', $classesDir) +
         @(Get-ChildItem -Recurse $sourceDir -Filter '*.java' | ForEach-Object FullName))
 
-    $outputJar = Join-Path $ReleaseDir "mekanism-upgrade-caps-forge-$MinecraftVersion-1.0.6.jar"
+    $outputJar = Join-Path $ReleaseDir "MekanismUpgradeCaps-Forge-$MinecraftVersion-1.0.0.jar"
     Remove-Item -LiteralPath $outputJar -Force -ErrorAction SilentlyContinue
     Push-Location $resourcesDir
     try {
